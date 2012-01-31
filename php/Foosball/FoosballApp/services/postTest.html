@@ -1,0 +1,71 @@
+<HTML>
+
+<HEAD>
+	<TITLE>Hello Test</TITLE>
+</HEAD>
+
+<BODY>
+
+
+
+<FORM ACTION="GenericWriteDb.php"  METHOD="POST">
+
+<INPUT TYPE="SUBMIT"  Name="SendJSON" VALUE="CareerAcquisition">
+
+<INPUT type="hidden" name="rows" id="dataRows" value="">
+<INPUT type="hidden" name="input" id="input" value="json">
+
+</FORM>
+
+
+<SCRIPT>
+
+
+var myJSONObject =   [               
+	        {	"databaseName" : "careerAcquisition",
+			"row": 	{"date": "2009-01-01", "valid" : "1", "total" : "45", "added" : "0", "deleted": "0", "result" : "1", "Company_Def_ticker_id" : "AAPL", "CareerAcquisition_Def_id" : "1"}
+		},
+		{	"databaseName" : "careerAcquisition",
+			"row": {"date": "2009-01-01", "valid" : "1", "total" : "45", "added" : "0", "deleted": "0", "result" : "1", "Company_Def_ticker_id" : "ALTR", "CareerAcquisition_Def_id" : "2"}
+		} 
+        ] ;
+
+var myJSONText = JSON.stringify(myJSONObject);
+document.getElementById('dataRows').value=myJSONText;
+
+
+</SCRIPT>
+
+
+
+<FORM ACTION="GenericWriteDb.php"  METHOD="POST">
+
+<INPUT TYPE="SUBMIT"  Name="CareerJobLink.Submit" VALUE="CareerJobLink">
+
+<INPUT type="hidden" name="rows" id="careerJobLinkRows" value="">
+<INPUT type="hidden" name="input" id="input" value="json">
+
+</FORM>
+
+<SCRIPT>
+var careerJobLink =   [               
+	        {
+			"databaseName" : "careerJobLink",
+			"row": {"url" : "'http://www.altera.com/corporate/jobs/reqs/2798.html'", "name" : "Accountant", "title" : "0", "location": "Malaysia-Penang", "reportsTo" : "unknown", "department" : "Finance", "CareerAcquisition_id" : "6"}
+		},
+	        {
+			"databaseName" : "careerJobLink",
+			"row": {"url" : "'http://www.altera.com/corporate/jobs/reqs/2798.html'", "name" : "Accountant", "title" : "1", "location": "Malaysia-Penang", "reportsTo" : "unknown", "department" : "Finance", "CareerAcquisition_id" : "6"}
+		},
+		
+        ] ;
+	
+
+var careerJobLinkText = JSON.stringify(careerJobLink);
+document.getElementById('careerJobLinkRows').value=careerJobLinkText;
+
+
+</SCRIPT>
+
+</BODY>
+<HTML>

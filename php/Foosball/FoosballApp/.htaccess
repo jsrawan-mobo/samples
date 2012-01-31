@@ -1,0 +1,54 @@
+<IfModule !mod_rewrite.c>
+	ErrorDocument 500 "mod_rewrite must be enabled"
+</IfModule>
+RewriteEngine on
+
+<Files .htaccess>
+order allow,deny
+deny from all
+</Files>
+
+
+
+#This would cause any error code resulting in to be forward to yoursite.com/errors/*.html
+#ErrorDocument 400 /errors/badrequest.html
+#ErrorDocument 401 /errors/authreqd.html
+#ErrorDocument 403 /errors/forbid.html
+#ErrorDocument 404 /errors/notfound.html
+#ErrorDocument 500 /errors/internalerror.html
+
+
+#webservices using api notation
+#RewriteBase /api
+#RewriteCond %{REQUEST_FILENAME} -d
+#RewriteCond %{REQUEST_FILENAME}\.php -f
+#`RewriteRule ^(.*)$ /services/$1.php
+
+# This prevents directory browsing.
+#Options -Indexes
+
+#Only go to the ReWrite Rule if its not a file or not a directory
+# RewriteCond %{REQUEST_FILENAME} -f
+# RewriteCond %{REQUEST_FILENAME} -d
+# RewriteRule ^/$ /errors/forbid.html
+
+
+#Only go to the ReWrite Rule if its not a file and not a directory
+# Request filename is relative to the server root.
+RewriteCond %{REQUEST_FILENAME} api.*
+RewriteRule ^api(.*)$ /services$1.php
+
+# This prevents directory browsing.
+Options -Indexes
+
+#Only go to the ReWrite Rule if its not a file or not a directory
+#The local filesytem is the REQUEST_FILENAME path.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !services.*
+#this passes the REQUEST_FILENAME to index.php, where everything passes through!!
+# In the code if we have a 'sendTo('login'), that is a controller php that must exist and goes through this
+# .htaccess rule below everytime.
+RewriteRule ^(.*)$ /index.php?u=$1
+
+RewriteBase /
