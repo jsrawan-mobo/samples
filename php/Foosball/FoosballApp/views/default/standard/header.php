@@ -5,6 +5,7 @@ if (auth::isloggedin()) {
                    '/tables/showAll'=>view::getViewPageName('tables'),
                    '/views/default/documents'=>'Documents',
                    '/foosballHome/showAll'=>view::getViewPageName('foosballHome'),
+                   '/foosballHomeTemplate/showAll'=>view::getViewPageName('foosballHomeTemplate'),
                    '/statistics/showAll' => view::getViewPageName('statistics'),
                    '/tournamentLoader/showAll' => view::getViewPageName('tournamentLoader'));
 
@@ -12,7 +13,7 @@ if (auth::isloggedin()) {
     $links['/logout'] = 'Log Out';
     
     echo '<ul>';
-    foreach ($links as $link=>$title) {
+    foreach ($links as $link=> $title) {
         echo '<li><a href="' . $link . '">' . $title . '</a></li>';
     }
 
@@ -20,7 +21,7 @@ if (auth::isloggedin()) {
     $player = lib::getitem('player');
 
     echo '<li>' .  $player->login . '</li>';
-    echo '<li>' .  $player->priveledge . '</li>';
+    echo '<li>' .  $player->privelege . '</li>';
     echo '</ul>';
 }
 ?>

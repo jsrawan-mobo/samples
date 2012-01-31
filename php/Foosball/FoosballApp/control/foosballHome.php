@@ -11,6 +11,7 @@ class foosballHome {
 
 
 
+
     public function defaultaction()
     {
         $this->showAll();
@@ -27,7 +28,7 @@ class foosballHome {
     {
 
         $gamescoreColl = new gamescoreCollection();
-        $gamescoreColl->findAll(1);
+        $gamescoreColl->findAllByUserId(1);
 
 
         $header = 'Show All Scores';

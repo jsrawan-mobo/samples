@@ -4,11 +4,12 @@
 	<link rel="stylesheet" type="text/css" href="/parts/main.css" />
 
 <?php
-
     echo "<title>" . $view['pagename'] . " | Analxyt Acquisition Database</title>";
-
 ?>
-    <script type="text/javascript" src="/parts/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="/parts/jquery-1.5.2.min.js"></script>
+
+    <?php echo $view['headerContent'] ?>
+
 </head>
 <body>
     <script type="text/javascript" src="/parts/wz_tooltip.js"></script>
