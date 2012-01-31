@@ -9,17 +9,56 @@ class view
 {
     public static $LAST_SHOW_VIEW = 'view_LAST_SHOW_VIEW';
 
+    /**
+     * @var USER AGENT viewtype
+     */
     public static $viewtype;
 
+    /**
+     * This a naming convention for all view rather than use html
+     * @var
+     */
     public static $VIEW_LOCATION_LOOKUP;
 
 
- 
+    /**
+     * this is the location to the head.php element that can be use
+     * to include a special header, i.e. loading javascript on demans
+     * @var
+     */
+    public static $_htmlHeadView;
+
+    /**
+     * We can render a smarty view or php view.
+     * @var
+     */
+    public static $_smarty;
+
 
 
     public function __construct()
     {
         ob_start();
+    }
+
+    /**
+     * @static
+     * @param smarty.class $smarty
+     * @return void
+     */
+    public static function setSmarty($smarty)
+    {
+       self::$_smarty = $smarty;
+    }
+
+
+    /**
+     * @static
+     * @return smarty.class
+     */
+    public static function getSmarty()
+    {
+       return self::$_smarty;
     }
 
     public static function setViewPageName($viewLocationLookup)
@@ -40,6 +79,35 @@ class view
         $content = ob_get_clean();
         return $content;        
     }
+
+    public static function renderHead()
+    {
+
+        $content = '';
+	    if (is_readable(self::$_htmlHeadView))
+        {
+            ob_start();
+            include self::$_htmlHeadView;
+            $content = ob_get_clean();
+         }
+		return $content;
+	}
+
+
+    public static function showSmarty($location, $smarty)
+	{
+	    if (empty(self::$viewtype)) {
+	        self::setviewtype();
+	    }
+
+        $views[] = $_SERVER['DOCUMENT_ROOT'] . '/views/' . self::$viewtype . '/' . $location . '.php';
+
+        $parts = explode('/', $location);
+		if (count($parts) == 2) {
+			self::$_htmlHeadView = $_SERVER['DOCUMENT_ROOT'] . '/views/' . self::$viewtype . "/" .$parts[0] .'/head.php';
+		}
+        $smarty->display('show.tpl');
+    }
     
 	public static function show($location, $params = array())
 	{
@@ -47,12 +115,15 @@ class view
 	        self::setviewtype();
 	    }
 	    
-	    if (self::$viewtype != 'default') 
-	    {
-	        $views[] = $_SERVER['DOCUMENT_ROOT'] . '/views/' . self::$viewtype . '/' . $location . '.php';
-	    }
-	    $views[] = $_SERVER['DOCUMENT_ROOT'] . '/views/default/' . $location . '.php';
-		
+        $views[] = $_SERVER['DOCUMENT_ROOT'] . '/views/' . self::$viewtype . '/' . $location . '.php';
+
+        $parts = explode('/', $location);
+		if (count($parts) == 2) {
+			self::$_htmlHeadView = $_SERVER['DOCUMENT_ROOT'] . '/views/' . self::$viewtype . "/" .$parts[0] .'/head.php';
+		}
+
+
+
 		$content = '';
 		
 		foreach ($views as $viewlocation) 
@@ -63,6 +134,7 @@ class view
 
 	    			ob_start();
 	    			include $viewlocation;
+
 	    			$content = ob_get_clean();
 	    			break;
 	    		}

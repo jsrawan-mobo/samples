@@ -23,6 +23,13 @@ class autoloader
 		$path = $_SERVER['DOCUMENT_ROOT'] . "/lib/DAO/{$class}.php";
 		if (is_readable($path)) require $path;
 	}
+
+	public static function formatautoloader($class)
+	{
+		$path = $_SERVER['DOCUMENT_ROOT'] . "/lib/format/{$class}.php";
+		if (is_readable($path)) require $path;
+	}
+
 	public static function modelautoloader($class)
 	{
 		$path = $_SERVER['DOCUMENT_ROOT'] . "/model/{$class}.php";
@@ -34,6 +41,8 @@ class autoloader
 		$path = $_SERVER['DOCUMENT_ROOT'] . "/control/{$class}.php";
 		if (is_readable($path)) require $path;
 	}
+
+
 	
 }
 
@@ -43,6 +52,7 @@ spl_autoload_register('autoloader::dalautoloader');
 spl_autoload_register('autoloader::daoautoloader');
 spl_autoload_register('autoloader::modelautoloader');
 spl_autoload_register('autoloader::controlautoloader');
+spl_autoload_register('autoloader::formatautoloader');
 
 
 
