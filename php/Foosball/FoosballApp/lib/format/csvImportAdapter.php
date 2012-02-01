@@ -11,12 +11,11 @@ class csvImportAdapter implements importAdapterInterface {
 
     public function setcontents($import)
     {
-        /*
+
         $this->person1 = $import['Person1'];
         $this->person2 = $import['Person2'];
         $this->score1 = $import['Score1'];
         $this->score2 = $import['Score2'];
-        */
     }
 }
 ?>

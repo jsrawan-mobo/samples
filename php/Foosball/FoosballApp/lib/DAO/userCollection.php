@@ -2,7 +2,7 @@
 class userCollection extends daocollection implements daocollectioninterface
 {
     
-    public function __construct(dao $dummy)
+    public function __construct()
     {
         
     }
@@ -28,6 +28,12 @@ class userCollection extends daocollection implements daocollectioninterface
             array_push($usersArray, $row['User'] );
         }
         return $usersArray;
+    }
+
+    public function getallUserNameCache()
+    {
+         $userArray = $this->getAllUserNames();
+
     }
     
     public function getLinkedTableRow()

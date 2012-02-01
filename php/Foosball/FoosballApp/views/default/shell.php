@@ -4,7 +4,7 @@
 	<link rel="stylesheet" type="text/css" href="/parts/main.css" />
 
 <?php
-    echo "<title>" . $view['pagename'] . " | Analxyt Acquisition Database</title>";
+    echo "<title>" . $view['pagename'] . " | Foosball World</title>";
 ?>
     <script type="text/javascript" src="/parts/jquery-1.5.2.min.js"></script>
 

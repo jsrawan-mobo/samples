@@ -59,20 +59,35 @@ class tournamentLoader {
                 */
 
                 $contact->timestamp = "";
+
+                $allPlayersCache = $this->getUserCache();
+
+                if ( isset($allPlayersCache[$adaptor->person1] ) )
+                {
+                    $contact->fk_User_Id_1 = $allPlayersCache[$adaptor->person1];
+                }
+                else
+                {
+                    throw new Exception ("Person1 is not in our player db:" . $adaptor->person1 );
+                }
+
+                if ( isset($allPlayersCache[$adaptor->person2] ) )
+                {
+                    $contact->fk_User_Id_2 = $allPlayersCache[$adaptor->person2];
+                }
+                else
+                {
+                    throw new Exception ("Person1 is not in our player db:" . $adaptor->person2 );
+                }
+
+
                 /*
-                $contact->firstname = $adaptor->person1;
-                $contact->middlename = $adaptor->person2;
-                $contact->lastname = $adaptor->score1;
-                $contact->ownerid = $currentuser->score2;
-                */
                 $contact->fk_User_Id_1 = 1;
                 $contact->fk_User_Id_2 = 2;
+                 */
 
-                /*$contact->score_1 = $adaptor->Score1;
-                $contact->score_2 = $adaptor->Score2;
-                */
-                $contact->score_1 = 6;
-                $contact->score_2 = 8;
+                $contact->score_1 = $adaptor->score1;
+                $contact->score_2 = $adaptor->score2;
 
                 $contact->save();
             }
@@ -84,6 +99,24 @@ class tournamentLoader {
             lib::sendto('/tournamentLoader/showLoaderInterace');
         }
     }
+
+
+    /***
+     * This get the user Cache to conver the text names into the users of the system
+     *
+     * @return - hashmap by username to user object
+     */
+    public function getUserCache()
+    {
+        $playersColl = new playerCollection();
+        $playersColl->getwithdata();
+        $cache = $playersColl->getAllPayerNameCache();
+        return $cache;
+
+
+
+    }
+
 
 
 
