@@ -22,6 +22,10 @@ class tournamentLoader {
     }
 
 
+    /**
+     * @param $dateSelected
+     * @return void
+     */
     public function showLoaderInterace($dateSelected)
     {
 
@@ -34,6 +38,10 @@ class tournamentLoader {
         echo view::show('tournamentLoader/show', array('type'=>'csv', 'header'=>$header,  'description'=> $decription ) );
     }
 
+    /**
+     * @throws Exception
+     * @return void
+     */
     public function processimport()
     {
         if (is_uploaded_file($_FILES['contactsfile']['tmp_name'])) {

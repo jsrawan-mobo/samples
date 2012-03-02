@@ -17,6 +17,9 @@ class foosballHome {
         $this->showAll();
     }
 
+    /**
+     * @return void
+     */
     public function showAll()
     {
         $dummy = 'hello';
