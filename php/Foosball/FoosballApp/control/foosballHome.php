@@ -23,7 +23,10 @@ class foosballHome {
         $this->showAllScores($dummy);
     }
 
-
+    /**
+     * @param $dateSelected
+     * @return void
+     */
     public function showAllScores($dateSelected)
     {
 
