@@ -10,6 +10,15 @@
 class tournamentLoader {
 
 
+    /**
+     * @var $_someVar1
+     */
+    public $_someVar1;
+    public $_someVar2;
+    public $_someVar3;
+    public $_someVar4;
+    public $_someVar5;
+
     public function defaultaction()
     {
         $this->showAll();
@@ -38,11 +47,12 @@ class tournamentLoader {
         echo view::show('tournamentLoader/show', array('type'=>'csv', 'header'=>$header,  'description'=> $decription ) );
     }
 
-    /**
-     * @throws Exception
-     * @return void
-     */
-    public function processimport()
+/**
+ * @throws Exception
+ * @param int $hello
+ * @return void
+ */
+    public function processimport($hello)
     {
         if (is_uploaded_file($_FILES['contactsfile']['tmp_name'])) {
             $contents = file_get_contents($_FILES['contactsfile']['tmp_name']);
@@ -125,7 +135,61 @@ class tournamentLoader {
 
     }
 
+    /**
+     * @param  $someVar1
+     */
+    public function setSomeVar1($someVar1)
+    {
+        $this->_someVar1 = $someVar1;
+    }
 
+    /**
+     * @return
+     */
+    public function getSomeVar1()
+    {
+        return $this->_someVar1;
+    }
+
+    public function setSomeVar2($someVar2)
+    {
+        $this->_someVar2 = $someVar2;
+    }
+
+    public function getSomeVar2()
+    {
+        return $this->_someVar2;
+    }
+
+    public function setSomeVar3($someVar3)
+    {
+        $this->_someVar3 = $someVar3;
+    }
+
+    public function getSomeVar3()
+    {
+        return $this->_someVar3;
+    }
+
+    public function setSomeVar4($someVar4)
+    {
+        $this->_someVar4 = $someVar4;
+    }
+
+    public function getSomeVar4()
+    {
+        return $this->_someVar4;
+    }
+
+    public function setSomeVar5($someVar5)
+    {
+        $this->_someVar5 = $someVar5;
+    }
+
+    public function getSomeVar5()
+    {
+        return $this->_someVar5;
+    }
 
 
 }
