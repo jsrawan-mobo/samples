@@ -15,6 +15,7 @@ class foosballHome {
     public function defaultaction()
     {
         $this->showAll();
+//Okay i figured this out.
     }
 
     /**
