@@ -1,0 +1,15 @@
+Person1,Score1,Person2,Score2
+Jag,4,Ishika,5
+Jag,1,Ishika,5
+Jag,2,Ishika,5
+Jag,0,Ishika,5
+Jag,6,Ishika,5
+Jag,5,Ishika,2
+Jag,4,Ishika,0
+Ishika,4,Jag,5
+Ishika,4,Jag,5
+Ishika,5,Jag,2
+Ishika,3,Jag,5
+Ishika,5,Jag,3
+Ishika,5,Jag,4
+Ishika,5,Jag,2
