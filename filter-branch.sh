@@ -1,7 +1,8 @@
 #!/bin/sh
 
-
-echo "Don't use this, i haven't tested it"
+#New line 1 on main
+#echo "Don't use this, i haven't tested it"
+#New line 2 on main
 exit(0)
 git filter-branch --commit-filter '
         if [ "$GIT_COMMITTER_NAME" = "jsrawan-ampush" ];
