@@ -1,0 +1,443 @@
+body {
+    font: 14px tahoma, verdana, sans-serif;
+	padding: 0;
+	margin: 0;
+	background-color: #f9f9f9;
+}
+
+/* Default tables use for stuff like database, are auto width type with no minimum width*/
+
+table {
+    border-collapse: collapse;
+}
+
+table th {
+	max-width : 400px;
+}
+
+table td {
+    border: 1px solid #111;
+    padding: 1px 4px 2px 4px;
+	color: black;
+	width : auto;
+	max-width : 400px;
+	text-align : center;
+	word-wrap: break-word;
+}
+hr {
+    clear: both;
+    margin: 20px 0;
+}
+fieldset, legend {
+    padding: 3px;
+    border: 1px solid #aaa;
+}
+legend {
+    font-weight: bold;
+    background-color: #ddd;
+    margin-bottom: 6px;
+}
+fieldset {
+    margin-bottom: 10px;
+}
+form div.row {
+    clear: left;
+    display: block;
+    margin: 5px 0 0;
+    padding: 1px 3px;
+}
+label {
+    display: block;
+    float: left;
+	width: 150px;
+	font-weight: bold;
+	text-align: right;
+	margin: 0 0 5px;
+	padding: 3px 5px;
+}
+input {
+	border: 1px solid #ccc;
+	padding: 1px 3px;
+	width: 200px;
+	float: left;
+}
+select {
+    float: left;
+    margin-right: 2px;
+}
+
+/* Change to blue if the type is an input box*/
+
+
+input:focus, select:focus {
+	background-color: #f9f9f9;
+}
+input.submitbutton {
+	border: 2px solid #333;
+	background-color: #369;
+	color: #fff;
+	cursor: pointer;
+	font-weight: bold;
+	width: auto;
+
+}
+input.radio {
+    width: auto;
+    border: none;
+    float: none;
+}
+.radiooption {
+    margin-right: 10px;
+}
+.error {
+	color: #f00;
+}
+
+/* This is for popupboxes to be used with onmouseover type events, check with wide input for compatability
+Note word:wrap  is a new css 3 attribute supported by mozilla.
+*/
+
+.popupbox {
+
+font: 12px tahoma, verdana, sans-serif;
+font-style : italic;
+color : #e5e205;
+text-align : left;
+word-wrap: break-word;
+background-color: #9d9fc3; 
+border: 3px solid #111; 
+height: 100px; 
+width: 130px; 
+padding: 5px;
+margin-left : 20px
+}
+
+
+.clickableLink {
+	color: blue;
+	text-decoration: underline;
+	cursor : pointer
+}
+
+
+.chart 
+{
+	margin-top: 20px; 
+	width: 1000px; 
+	height: 200px; 
+	margin-bottom: 10px; 
+}
+
+
+/* Defaults for header footer*/
+#header {
+    border-bottom: 1px solid #ccc;
+}
+#footer {
+    text-align: center;
+    clear: both;
+}
+
+#header, #footer {
+    background-color: #333;
+    padding: 5px;
+}
+
+#header ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+#header li {
+    display: inline;
+    margin-right: 10px; 
+}
+#header a, #header a:visited, #footer a, #footer a:visited {
+    color: #eee;
+}
+
+/* The min-width and auto allow the vertical scrollbars to not be required if the dispaly is at least 1024x768*/
+#body {
+    margin: 22px auto;
+    border: solid #ccc;
+    border-width: 0 1px;
+    background-color: #fff;
+    min-height: 500px;
+	min-width: 1000px;
+	width: Auto;
+    position : relative;
+}
+
+/* Body, we always have a left header and right header followed by data*/
+#body_hdr
+{
+	position : relative;
+	top : 5px;
+	width: 100%;
+	padding: 0px 0px 20px 0px;
+	float: left;
+	border: 0px;
+	height: 150px;
+}
+
+#body_hdr h1
+{
+	font-size : large;
+	font-weight : bold;
+}
+
+#body_hdr_left
+{
+	float: left;
+	position : relative;
+	top : 0px;
+	width: 300px;
+	padding: 0px;
+	border: 0px;
+	height: 100%;	
+}
+
+#body_hdr_center
+{
+	float: left;
+	position : relative;
+	top : 50px;
+	width: 600px;
+	padding: 0px;
+	border: 0px;
+	height: 100%;
+
+}
+
+#body_hdr_center table
+{
+	
+	border: 1px solid #111;
+	padding: 1px 4px 2px 4px;
+	color: black;
+	padding: 4px 5px;
+	text-align: center;
+	background-color: white;
+}
+
+#body_hdr_center td
+{
+	
+	border-bottom: 1px outset #CCCCCC;
+	border-left: 1px outset #CCCCCC;
+	border-top: 1px outset #CCCCCC;
+	border-right: 1px outset #CCCCCC;	
+	padding: 4px 5px;
+	text-align: center;
+	background-color: white;
+}
+
+
+/* Body, just so space and the bottom 20px to the real footer*/
+#body_data
+{
+	position: relative;
+	top : 5px;
+	left : 0px;
+	float : left;
+	width: 100%;
+	padding: 0px 0px 20px 0px;
+
+}
+
+#body_data table th
+{
+	min-width : 100px;
+}
+
+/* for body data that is displayed to user, we anchor is left and limit padding*/
+#body_data_user
+{
+	position: relative;
+	top : 5px;
+	left : 0px;
+	float : left;
+	width: 100%;
+	padding: 0px 0px 700px 0px;
+}
+
+/* Table type, limit padding, center all text in rows and grey background*/
+
+#body_data_user table th
+{
+	
+	border-bottom:1px solid #CCCCCC;
+	border-left:1px solid #CCCCCC;
+	border-top:1px solid #CCCCCC;
+	padding:4px 5px;
+	text-align:center;
+	background-color:#dcdcdc;
+}
+
+
+
+
+/* cell types, for narrow input, wide input and coloring of certain cells.  Hover over certain inputs*/
+
+tr.highlighted_row
+{
+	background-color: yellow;
+}
+
+td.dropdown_input {
+	width:90px;
+}
+
+td.dropdown_input:hover
+{
+    background-color: blue;
+	color: white;
+}
+
+td.radio_input {
+	width: 100px;
+	color: green;
+}
+
+input.radio_input {
+	width: 20px;
+	float: left;
+	text-align : left;
+}
+
+td.radio_input:hover
+{
+    background-color: blue;
+	color: white;
+}
+
+td.checkbox_input {
+	width: 50px;
+	color: red;
+}
+
+input.checkbox_input {
+	width: 20px;
+	float: left;
+	text-align : left;
+}
+
+td.checkbox_input:hover
+{
+    background-color: blue;
+	color: white;
+}
+
+input.boolean_input {
+	width: 20px;
+	float: left;
+	text-align : left;
+}
+
+
+table td.bluecell   {
+	background-color:#0567fb;
+}
+
+table td.yellowCell   {
+	background-color:#f6f908;
+}
+td input.boolean_input {
+	border-width: 0 1px;
+}
+
+td input.boolean_input:hover
+{
+    background-color: blue;
+	color: white;
+}
+
+/* For wide inputs, we make min width 150 and width can get bigger with page.  Class Needs to be applied to input and td*/
+
+td.wide_input {
+	width: 33%;
+}
+
+input.wide_input {
+	min-width : 150px;
+	width: 100%;
+	float: left;
+	text-align : left;
+}
+
+
+td input.wide_input {
+	border-width: 0 1px;
+}
+
+td input.wide_input:hover
+{
+    background-color: blue;
+	color: white;
+}
+
+input.table_submit_button {
+    color: black;
+    text-align: center;
+    font-weight: bold;
+    background-color: white;
+    width : 100%;
+    border-style: outset;
+    float: right;    
+}
+
+
+input.submit_button {
+    color: black;
+    font-weight: bold;
+    background-color: white;
+	width : auto;
+	border-style: outset;
+}
+
+input.submit_button_green {
+    color: black;
+    font-weight: bold;
+    background-color: green;
+	width : auto;
+	border-style: outset;
+}
+
+input.submit_button:hover
+{
+    background-color: blue;
+	color: white;
+}
+
+input.table_submit_button:hover
+{
+    background-color: blue;
+	color: white;
+}
+
+/* sidebar is not used, rest i'm not sure if they are used*/
+.sidebar {
+    padding: 1px;
+    float: right;
+}
+a.featured {
+    padding: 10px;
+    color: #000;
+    font-weight: bold;
+    background-color: #6f6;
+    margin: 5px;
+}
+a.featured:hover {
+    background-color: #292;
+    color: #fff;
+}
+.sidebar a.removal {
+    background-color: #f66;
+}
+
+/* login page is special, the width is narrow so it will look to appear in center.*/
+#loginbox {
+    margin: 0 auto;
+    width: 500px;
+}
