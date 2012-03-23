@@ -1,6 +1,6 @@
 #!/bin/sh
 
-
+#made change on branch
 echo "Don't use this, i haven't tested it"
 exit(0)
 git filter-branch --commit-filter '
