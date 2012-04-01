@@ -1,5 +1,13 @@
 #!/bin/sh
 
+
+# This is change on release
+# I'm going to take this change, regardless of  what master did
+# I'm going to rebase this change, regardless on whats on master.
+#
+#
+#
+
 #made change on branch1
 echo "Don't use this, i haven't tested it"
 #mad change on branch2
