@@ -1,5 +1,8 @@
 #!/bin/sh
 
+
+
+# This is on main, will be rejected by release branch when we do git merge -s ours from RELEASE branch
 #New line 1 on main
 #echo "Don't use this, i haven't tested it"
 #New line 2 on main
