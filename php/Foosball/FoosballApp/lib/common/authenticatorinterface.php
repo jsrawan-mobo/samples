@@ -1,7 +1,7 @@
 <?php
 /**
  * Defines the authentication interface.
- * asdfasdf
+ * asdfasdf ads
  */
 interface authenticatorinterface {
     public function authenticate(user $user, $password);
