@@ -52,7 +52,7 @@ class tournamentLoader {
  * @param int $hello
  * @return void
  */
-    public function processimport($hello)
+    public function processimport()
     {
         if (is_uploaded_file($_FILES['contactsfile']['tmp_name'])) {
             $contents = file_get_contents($_FILES['contactsfile']['tmp_name']);
