@@ -5,24 +5,22 @@
  * Date: 1/30/12
  * Time: 10:18 PM
  * To change this template use File | Settings | File Templates.
+ * 123423
  */
 
 class foosballHome {
 
-
 //Here is some temp changes
 
-    public function defaultaction()
-    {
+    public function defaultaction() {
         $this->showAll();
-//Okay i figured this out.
+        //Okay i figured this out.
     }
 
     /**
      * @return void
      */
-    public function showAll()
-    {
+    public function showAll() {
         $dummy = 'hello';
         $this->showAllScores($dummy);
     }
@@ -31,19 +29,17 @@ class foosballHome {
      * @param $dateSelected
      * @return void
      */
-    public function showAllScores($dateSelected)
-    {
+    public function showAllScores($dateSelected) {
 
         $gamescoreColl = new gamescoreCollection();
         $gamescoreColl->findAllByUserId(1);
 
-
         $header = 'Show All Scores';
-        $decription = "Sorted By Date:" . $dateSelected ;
-        echo view::show('foosballHome/show', array('gamescoreColl'=>$gamescoreColl, 'header'=>$header,  'description'=> $decription ) );
+        $decription = "Sorted By Date:" . $dateSelected;
+        echo view::show('foosballHome/show', array (
+                                                   'gamescoreColl' => $gamescoreColl,
+                                                   'header'        => $header,
+                                                   'description'   => $decription
+                                             ));
     }
-
-
-
-
 }
