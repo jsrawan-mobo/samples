@@ -16,62 +16,117 @@
 # 1599 observations, or 11 attributes
 # avg/std/min/max/rms of all 11 attributes
 #
+
 library(ggplot2)
 rm(list=ls())
 
-wine_raw <- read.table(file="winequality-red.txt",  sep=';', header=T)
 
-wine_raw_avg = mean(wine_raw)
-wine_raw_max = apply(wine_raw,2, max)
-wine_raw_min = apply(wine_raw,2,min)
-wine_raw_std = sd(wine_raw)
-#wine_raw_rms = rms(pData)
-wine_stats_frame <- data.frame(wine_raw_avg, wine_raw_max, wine_raw_min, wine_raw_std)
-
-names(wine_raw_avg)
-# Now evaluate the frame.
-wine_stats_frame
-wine_stats_frame$wine_raw_avg
-
-barplot (wine_raw_avg, ylab = "avg", xlab = "",  las=2)
-
-boxplot(fixed.acidity~quality,data=wine_raw, main="Fixed.Acidity by Quality",
-   xlab="Quality", ylab="Fixed.Acidity") 
-
-
-df <- data.frame(
-names = names(wine_raw_avg),
-mean = wine_raw_avg,
-std = wine_raw_std,
-max = wine_raw_max,
-min = wine_raw_min
-)
-
-
-
-# then the description of the plot is natural
-qplot(names, mean, data = df) +
-geom_linerange(aes(ymin = mean - std, ymax = mean + std)) +
-geom_boxplot(notch = TRUE, notchwidth = 0.5)
-
+##############################FUNCTIONS#####################################
 stats <- function(x) {
     ans <- boxplot.stats(x)
     data.frame(ymin = ans$conf[1], ymax = ans$conf[2])
 }
 
-vgrid<-function(x,y){
-viewport(layout.pos.row=x,layout.pos.col=y)}
+vgrid <- function(x,y) {
+    viewport(layout.pos.row = x,layout.pos.col = y)
+}
+
+ggboxplotcustom <- function (data_set, fun) {
+
+   
+
+  #attach (data_stats)
+  nCol <- ncol(data_set)
+  nCol = 1
+  #pushViewport(viewport(layout=grid.layout(1,nCol)))
+  p = list()
+  #p = rep (1:nCol)
+  for(iCol in 1:nCol){
+  
+      #name = names(data_set)[iCol]
+      #print (name)
+      q = ggplot(data=data_set, aes(name, data_set[,iCol] )) +
+            geom_boxplot(notch = TRUE, notchwidth = 0.5) +
+            stat_summary(fun.data = stats, geom = "linerange", colour = "skyblue", size = 5)
+      p <- list(q) 
+      #print(p, vp=vgrid(1,iCol))
+     
+  } 
+  #detach (data_stats)
+  #print (p);
+  return (p);
+}
+
+# then the description of the plot is natural
+ggsimpleboxplot <- function (data_set) {
+    
+    data_stats <- data.frame(
+        mean = mean(data_set),
+        std = sd(data_set),
+        max = apply(data_set,2, max),
+        min = apply(data_set,2,min)
+    )    
+     qplot(names, mean, data = data_stats) +
+        geom_linerange(aes(ymin = mean - std, ymax = mean + std)) +
+        geom_boxplot(notch = TRUE, notchwidth = 0.5)
+    
+}
+
+basesimpleboxplot <- function (data_set) {
+    
+    data_stats <- data.frame(
+        mean = mean(data_set),
+        std = sd(data_set),
+        max = apply(data_set,2, max),
+        min = apply(data_set,2,min)
+    )    
+    
+    #barplot (wine_raw_avg, ylab = "avg", xlab = "",  las=2)
+
+    #boxplot(fixed.acidity~quality,data=wine_raw, main="Fixed.Acidity by Quality",
+    #   xlab="Quality", ylab="Fixed.Acidity") 
+
+}
+
+
+echo <- function(x) { 
+    print(x)
+}
+
+################################MAIN######################################3333
+
+
+wine_raw <- read.table(file="winequality-red.txt",  sep=';', header=T)
+#echo(wine_raw)
+#ggsimpleboxplot(wine_raw)
+#pushViewport(viewport(layout=grid.layout(1,2)))
+#p = ggboxplotcustom(wine_raw, stats)
+
+#nCol = ncol(wine_raw)
+#print(p[1], vp=vgrid(1,2))
+# 
+# for(iCol in 1:nCol){
+#     print(p[iCol], vp=vgrid(1,iCol))
+# }
+
 
 nCol = ncol(wine_raw)
 pushViewport(viewport(layout=grid.layout(1,nCol)))
 for(iCol in 1:nCol){
 
     name = names(wine_raw)[iCol]
-    p <- ggplot(data=wine_raw, aes(name, wine_raw[,iCol] )) + geom_boxplot(notch = TRUE, notchwidth = 0.5) +
+    print(name)
+    p <- ggplot(data=wine_raw, aes(name, wine_raw[,iCol] )) + 
+        geom_boxplot(notch = TRUE, notchwidth = 0.5) +
         stat_summary(fun.data = stats, geom = "linerange", colour = "skyblue", size = 5)
-    print(p, vp=vgrid(1,iCol))
+    q = list(p)
+    print(q[[1]], vp=vgrid(1,iCol))
 
 }
+
+
+
+
 
 png("WineQuality-BoxPlot.png",4000,1500,res=300)
 grid.newpage()
