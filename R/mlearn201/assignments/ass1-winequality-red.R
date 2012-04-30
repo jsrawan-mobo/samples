@@ -40,12 +40,13 @@ ggboxplotcustom <- function (data_set, func) {
     q = list();
     for(iCol in 1:nCol){
     
-        name = names(data_set)[iCol]
+        name <- names(data_set)[iCol]
         print(name)
-        p <- ggplot(data=data_set, aes(name, data_set[,iCol] )) + 
+        p <- ggplot(data=data_set, mapping = aes(names(data_set)[iCol], names(data_set)[iCol]  )) + 
             geom_boxplot(notch = TRUE, notchwidth = 0.5) +
             stat_summary(fun.data = func, geom = "linerange", colour = "skyblue", size = 5)
-        q[[iCol]] = p            
+        #q[[iCol]] = 
+        #    p            
     }
     return (p)
 }
@@ -100,10 +101,10 @@ iCol = 1
 print(q, vp=vgrid(1,1))
 
 
-# 
-# for(iCol in 1:nCol){
-#     print(p[iCol], vp=vgrid(1,iCol))
-# }
+
+for(iCol in 1:nCol){
+     print(p[iCol], vp=vgrid(1,iCol))
+ }
 
 
 nCol = ncol(wine_raw)
