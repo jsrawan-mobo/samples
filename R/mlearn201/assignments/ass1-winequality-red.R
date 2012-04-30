@@ -31,12 +31,12 @@ vgrid <- function(x,y) {
     viewport(layout.pos.row = x, layout.pos.col = y)
 }
 
-ggboxplotcustom <- function (data_set, fun) {
+ggboxplotcustom <- function (data_set, func) {
 
    
     nCol <- ncol(data_set)
-    #nCol = 1
-    pushViewport(viewport(layout=grid.layout(1,nCol)))
+    nCol = 1
+    #pushViewport(viewport(layout=grid.layout(1,nCol)))
     q = list();
     for(iCol in 1:nCol){
     
@@ -44,10 +44,10 @@ ggboxplotcustom <- function (data_set, fun) {
         print(name)
         p <- ggplot(data=data_set, aes(name, data_set[,iCol] )) + 
             geom_boxplot(notch = TRUE, notchwidth = 0.5) +
-            stat_summary(fun.data = stats, geom = "linerange", colour = "skyblue", size = 5)
+            stat_summary(fun.data = func, geom = "linerange", colour = "skyblue", size = 5)
         q[[iCol]] = p            
     }
-    return (q)
+    return (p)
 }
 
 # then the description of the plot is natural
@@ -93,10 +93,11 @@ wine_raw <- read.table(file="winequality-red.txt",  sep=';', header=T)
 #ggsimpleboxplot(data_set)
 data_set <- wine_raw
 q = ggboxplotcustom(data_set, stats)
+nCol = ncol(wine_raw)
 pushViewport(viewport(layout=grid.layout(1,nCol)))
-
-#nCol = ncol(wine_raw)
-print(q[[1]], vp=vgrid(1,1))
+name = "hello"
+iCol = 1
+print(q, vp=vgrid(1,1))
 
 
 # 
