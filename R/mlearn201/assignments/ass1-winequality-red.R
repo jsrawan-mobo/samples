@@ -31,24 +31,22 @@ vgrid <- function(x,y) {
     viewport(layout.pos.row = x, layout.pos.col = y)
 }
 
-ggboxplotcustom <- function (data_set, func) {
+ggboxplotcustom <- function (data_set_frame) {
 
-   
-    nCol <- ncol(data_set)
+    nCol <- ncol(data)
     nCol = 1
     #pushViewport(viewport(layout=grid.layout(1,nCol)))
     q = list();
     for(iCol in 1:nCol){
     
-        name <- names(data_set)[iCol]
-        print(name)
-        p <- ggplot(data=data_set, mapping = aes(names(data_set)[iCol], names(data_set)[iCol]  )) + 
+         q[[1]] <- ggplot(data=data_set, mapping = aes(names, data_set[,iCol] )) + 
+         #    q[[1]] <- ggplot(data=data_set, aes(x=name, y=data_set[,iCol] ) ) +
             geom_boxplot(notch = TRUE, notchwidth = 0.5) +
-            stat_summary(fun.data = func, geom = "linerange", colour = "skyblue", size = 5)
+            stat_summary(fun.data = stats, geom = "linerange", colour = "skyblue", size = 5)
         #q[[iCol]] = 
         #    p            
     }
-    return (p)
+    return (q)
 }
 
 # then the description of the plot is natural
@@ -87,25 +85,96 @@ echo <- function(x) {
     print(x)
 }
 
+
+
+stepwise_fw_regression <- function (data_set, folds) {
+    
+    tCol = ncol(data_set)
+    X = data_set[,1:(tCol-1)]
+    Y = data_set[,tCol]
+    nCol = ncol(X)
+    Index <- 1:nrow(X)
+    colIndex <- 1:nCol
+    seBest <- 1000000.0 #set really big sum of square error
+    seArray <- rep(0.0, nCol-1)
+    Xtemp <- X[,1]
+    nxval <- folds # 10 fold, about 160 obs per fold.
+    
+    
+    ## for each column, computer the regression
+    ## %% is modulus
+    ## Ytemp ~ Xtemptmp, is Y the output predicted by the X
+    ## This performs the stepwise for each column
+    ## fit the linear mod of Y for 10 different data sets
+    for(iCol in 1:nCol){
+        Xcurrent <- X[,iCol]
+        se <- 0.0
+    	for(ixval in 1:nxval){
+    		Iout <- which(Index%%nxval==(ixval-1))        
+            #cat ("Number of Samples", length(Iout) , '\thello\n' )
+            
+            ##The negative is the test set.  The positive is the current training set
+     		Xtrain <- Xcurrent[-Iout]
+    		Xtext <- Xcurrent[Iout]
+    		Ytrain <- Y[-Iout]
+    		Ytest <- Y[Iout]
+            
+            # Linear model returns coefficients
+            # y = mx+b.  The intercept, b is the first coefficient, and m is second cofficient.
+            # Use the cofficients to get the estimate Y.
+            # So we basically just get a line back.
+    		linMod <- lm(Ytrain ~ Xtrain)	
+    		v <- as.array(linMod$coefficients)
+    		yHat <- rep(0.0,length(Xtext))  
+    		for(i in 1:length(Xtext)) {
+    			yHat[i] <- v[1] + Xtext[i]*v[2]		
+    		}
+    		dY <- yHat -Ytest
+    		seTemp <- (1/length(Xtext))*sum(dY*dY)
+            cat ("StandardError for", names(wine_raw)[iCol], ' error'  ,  seTemp , '\thello\n' )
+    		se <- se + seTemp/nxval		
+    	}
+    	#print(iCol + "--" + se)
+    	if(se < seBest) {
+    		seBest <- se
+    		iColBest <- iCol
+    	}
+    }
+    stats_frame = data.frame( seBest = seBest, 
+                               iColBest = iColBest)
+    return (stats_frame);
+    
+}
 ################################MAIN######################################3333
 
 
 wine_raw <- read.table(file="winequality-red.txt",  sep=';', header=T)
+data_set_frame <- data.frame(
+                        data_set = wine_raw,
+                        xValue = 1:1599
+                         )
+
+# Doesn't work in function due to AES problems
 #ggsimpleboxplot(data_set)
-data_set <- wine_raw
-q = ggboxplotcustom(data_set, stats)
-nCol = ncol(wine_raw)
-pushViewport(viewport(layout=grid.layout(1,nCol)))
-name = "hello"
-iCol = 1
-print(q, vp=vgrid(1,1))
+#q = ggboxplotcustom(data_set_frame)
+#nCol = ncol(wine_raw)
+#pushViewport(viewport(layout=grid.layout(1,nCol)))
+#name = "hello"
+#iCol = 1
+#print (q);
+#print(q[[1]], vp=vgrid(1,1))
+
+#nCol = ncol(wine_raw)
+#for(iCol in 1:nCol){
+#     print(p[iCol], vp=vgrid(1,iCol))
+# }
 
 
-
-for(iCol in 1:nCol){
-     print(p[iCol], vp=vgrid(1,iCol))
- }
-
+#
+# The box plot gives us the distribution
+# the box lower, middle, upper gives the 25%, mean, 75%
+# the black line gives you the 10%, 90%.  The dots are out of range.
+# Doesn't handle floating point values
 
 nCol = ncol(wine_raw)
 pushViewport(viewport(layout=grid.layout(1,nCol)))
@@ -120,14 +189,14 @@ for(iCol in 1:nCol){
     print(q[[1]], vp=vgrid(1,iCol))
 }
 
-
-
-
-
-png("WineQuality-BoxPlot.png",4000,1500,res=300)
+#
+# Dump this to a png
+#
+#
+png("WineQuality-BoxPlot.png", 4000,1500,res=300)
 grid.newpage()
 for(iCol in 1:nCol){
-    print( p[iCol],vp=v(1,nCol))
+    print( p[iCol],vp=vgrid(1,nCol))
 }
 dev.off()
 
@@ -140,8 +209,9 @@ dev.off()
 
 #
 # 1. Stepwise forward regression with 10 fold cross-validation
-# take the each step and try to add a column
-# I.e. take 9 attribues and train them.  Test again the remaining 2 
+# i.e. take each column, and do a 10 fold on it.
+# Average the error for each fold
+# At the end pick the parameter with smallest error.
 # see ESLII pg 76 and Prostate.R
 #
 # Note the cross fold validation is over the samples, while the
@@ -151,58 +221,82 @@ dev.off()
 
 ##1. Setup variables.  Calculate stepwise error as each column is added
 ## Start with first column
-nCol = ncol(wine_raw)
-Index <- 1:nrow(wine_raw)
+
+se_stats = stepwise_fw_regression(wine_raw, 10)
+
+tCol = ncol(wine_raw)
+X = wine_raw[,1:(tCol-1)]
+Y = wine_raw[,tCol]
+nCol = ncol(X)
+Index <- 1:nrow(X)
 colIndex <- 1:nCol
-seBest <- 1000000.0 
+seBest <- 1000000.0 #set really big sum of square error
 seArray <- rep(0.0, nCol-1)
-Xtemp <- wine_raw[,1]
-nxval <- 10
+Xtemp <- X[,1]
+nxval <- 10 # 10 fold, about 160 obs per fold.
+
 
 ## for each column, computer the regression
 ## %% is modulus
 ## Ytemp ~ Xtemptmp, is Y the output predicted by the X
-for(iTry in 1:nCol){
-    Xtemp <- wine_raw[,iTry]
+## This performs the stepwise for each column
+## fit the linear mod of Y for 10 different data sets
+for(iCol in 1:nCol){
+    Xcurrent <- X[,iCol]
 	se <- 0.0
 	for(ixval in 1:nxval){
-		Iout <- which(Index%%nxval==(ixval-1))
-		XtempTemp <- Xtemp[-Iout]
-		Xnew <- Xtemp[Iout]
-		Ytemp <- Y[-Iout]
-		Ynew <- Y[Iout]
-		linMod <- lm(Ytemp ~ XtempTemp)	
+		Iout <- which(Index%%nxval==(ixval-1))        
+        #cat ("Number of Samples", length(Iout) , '\thello\n' )
+        
+        ##The negative is the test set.  The positive is the current training set
+ 		Xtrain <- Xcurrent[-Iout]
+		Xtext <- Xcurrent[Iout]
+		Ytrain <- Y[-Iout]
+		Ytest <- Y[Iout]
+        
+        # Linear model returns coefficients
+        # y = mx+b.  The intercept, b is the first coefficient, and m is second cofficient.
+        # Use the cofficients to get the estimate Y.
+        # So we basically just get a line back.
+		linMod <- lm(Ytrain ~ Xtrain)	
 		v <- as.array(linMod$coefficients)
-		yHat <- rep(0.0,length(Xnew))
-		for(i in 1:length(Xnew)){
-			yHat[i] <- v[1] + Xnew[i]*v[2]		
+		yHat <- rep(0.0,length(Xtext))  
+		for(i in 1:length(Xtext)) {
+			yHat[i] <- v[1] + Xtext[i]*v[2]		
 		}
-		dY <- yHat -Ynew
-		seTemp <- (1/length(Xnew))*sum(dY*dY)
+		dY <- yHat -Ytest
+		seTemp <- (1/length(Xtext))*sum(dY*dY)
+        cat ("StandardError for", names(wine_raw)[iCol], ' error'  ,  seTemp , '\thello\n' )
 		se <- se + seTemp/nxval		
 	}
-	#print(se)
-	if(se<seBest){
+	#print(iCol + "--" + se)
+	if(se < seBest) {
 		seBest <- se
-		iBest <- iTry
+		iColBest <- iCol
 	}
 }
+ 
 
-#run through the same calculation for the next 6 variables
-for(iStep in 1:6){
+seArray[1] <- seBest
+I <- iColBest
+
+
+#run through the same calculation for the next 10 variables
+#skip past the first column
+for(iStep in 1:nCol){
     colSelection <- colIndex[-I]
 	seBest <- 1000000
 	for(iTry in 1:length(colSelection)){
 		iCols <- c(I,colSelection[iTry])
-		Xtemp <- as.matrix(X[,iCols])
+		Xcurrent <- as.matrix(X[,iCols])
 		se <- 0.0
 		for(ixval in 1:nxval){
 			Iout <- which(Index%%nxval==(ixval-1))
-			XtempTemp <- Xtemp[-Iout,]
-			Xnew <- Xtemp[Iout,]
-			Ytemp <- Y[-Iout]
+			Xtrain <- Xcurrent[-Iout,]
+			Xnew <- Xcurrent[Iout,]
+			Ytrain <- Y[-Iout]
 			Ynew <- Y[Iout]
-			linMod <- lm(Ytemp ~ XtempTemp)	
+			linMod <- lm(Ytrain ~ Xtrain)	
 			
 			v <- as.array(linMod$coefficients)
 			isize <- length(v) - 1
@@ -227,6 +321,7 @@ for(iStep in 1:6){
 	print(I)
 	seArray[iStep + 1] <- seBest	
 }
+plot(seArray)
 points(sqrt(seArray), pch=".", cex=3, col=2)
 
 # 2. Stepwise backwards regression
