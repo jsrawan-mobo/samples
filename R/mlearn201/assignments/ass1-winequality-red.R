@@ -144,6 +144,69 @@ stepwise_fw_regression <- function (data_set, folds) {
     return (stats_frame);
     
 }
+
+stepwise_fw_regression_step2 <- function(data_set, folds, seBestPrev, iColBestPrev) {
+    # Use the learned column and keep adding new columns 
+    # I is eventually all the columns of the data set.
+    #
+    tCol = ncol(data_set)
+    X = as.matrix( data_set[,1:(tCol-1)] )
+    Y = data_set[,tCol]
+    nCol = ncol(X)    
+    seArray <- rep(0.0, nCol)
+    seArray[1] <- seBestPrev
+    I <- iColBestPrev   
+    colIndex = 1:(nCol)
+    Index <- 1:nrow(X)
+    seBest <- 1000000.0 #set really big sum of square error    
+    for(iStep in 1:(nCol-1)){
+        
+        colSelection <- colIndex[-I]        
+        rm(iColBest)
+        seBest <- 1000000
+    	for(iTry in 1:length(colSelection)){
+    	
+            iCols <- c(I, colSelection[iTry])
+            cat (iTry,'--icols: ', iCols, "\n")
+    		Xcurrent <- as.matrix(X[,iCols])
+    		se <- 0.0
+    		for(ixval in 1:folds){
+                
+    			Iout <- which(Index%%folds==(ixval-1))
+    			Xtrain <- Xcurrent[-Iout,]
+    			Xnew <- Xcurrent[Iout,]
+    			Ytrain <- Y[-Iout]
+    			Ynew <- Y[Iout]
+    			linMod <- lm(Ytrain ~ Xtrain)	
+    			
+    			v <- as.array(linMod$coefficients)
+                print(v)
+    			isize <- length(v) - 1
+    			yHat <- rep(0.0, nrow(Xnew) )
+    			for(i in 1:nrow(Xnew) ) {
+    				yHat[i] <- v[1]
+    				for(j in 1:isize){
+    					yHat[i] <- yHat[i] + Xnew[i,j]*v[j+1]
+    				}				
+    			}
+    			dY <- yHat - Ynew
+    			seTemp <- ((1/nrow(Xnew))*sum(dY*dY))
+    			se <- se + seTemp/folds		
+    		}
+            cat ("\n","se=", se )
+    		if( se < seBest) {
+    			seBest <- se
+    			iColBest <- colSelection[iTry]
+    		}		
+    	}
+    	I <- c(I,iColBest)
+    	print(I)
+    	seArray[iStep + 1] <- seBest	
+    }
+    stats_frame = data.frame(   I = I, 
+                               seArray = seArray)
+    return (stats_frame);    
+}
 ################################MAIN######################################3333
 
 
@@ -227,73 +290,12 @@ folds = 10
 seArray <- rep(0.0, nCols-1)
 se_stats = stepwise_fw_regression(wine_raw, folds)
 
- 
-# Use the learned column and keep adding new columns 
-# I is eventually all the columns of the data set.
-#
-seArray[1] <- se_stats$seBest
-I <- se_stats$iColBest
-tCol = ncol(wine_raw)
-X = as.matrix( wine_raw[,1:(tCol-1)] )
-Y = wine_raw[,tCol]
-nCol = ncol(X)
-colIndex = 1:(nCol)
-Index <- 1:nrow(X)
-seBest <- 1000000.0 #set really big sum of square error    
-Xtemp <- X[,1]
-nxval <- folds # 10 fold, about 160 obs per fold.
-for(iStep in 1:(nCol-1)){
-    colSelection <- colIndex[-I]
-	seBest <- 1000000
-	for(iTry in 1:length(colSelection)){
-		iCols <- c(I, colSelection[iTry])
-        cat (iTry,'--icols: ', iCols, "\n")
-		Xcurrent <- as.matrix(X[,iCols])
-		se <- 0.0
-		for(ixval in 1:nxval){
-			Iout <- which(Index%%nxval==(ixval-1))
-			Xtrain <- Xcurrent[-Iout,]
-			Xnew <- Xcurrent[Iout,]
-			Ytrain <- Y[-Iout]
-			Ynew <- Y[Iout]
-			linMod <- lm(Ytrain ~ Xtrain)	
-			
-			v <- as.array(linMod$coefficients)
-            print(v)
-			isize <- length(v) - 1
-			yHat <- rep(0.0, nrow(Xnew))
-			for(i in 1:nrow(Xnew)){
-				yHat[i] <- v[1]
-				for(j in 1:isize){
-					yHat[i] <- yHat[i] + Xnew[i,j]*v[j+1]
-				}				
-			}
-			dY <- yHat - Ynew
-			seTemp <- ((1/nrow(Xnew))*sum(dY*dY))
-			se <- se + seTemp/nxval		
-		}
-        cat ("\n","se=", se )
-		if( se < seBest) {
-			seBest <- se
-			iBest <- colSelection[iTry]
-		}		
-	}
-	I <- c(I,iBest)
-	print(I)
-	seArray[iStep + 1] <- seBest	
-}
-
-x <- rnorm(50)
-y <- rnorm(50)
-plot(x,y,asp=1)
-textxy(x,y,1:50,m=c(mean(x),mean(y)))
-
-
-# Don't now how last point gets there
+# This function will do the rest.  We could combine into one.
+se_stats_s2 = stepwise_fw_regression_step2(wine_raw, folds, se_stats$seBest, se_stats$iColBest)
 xaxis = seq(1, 11, length.out=11)
-plot(xaxis, seArray[1:11], main='Squared Error vs Iteration',col="blue", pch=19, ylim=c(0.4,0.5) )
-textxy( xaxis, seArray[1:11], I,  cx = 1.0, dcol = "black", )
-#points( seArray, pch=".", cex=3, col=2)
+plot(xaxis, se_stats_s2$seArray[1:11], main='Squared Error vs Iteration',col="blue", pch=19, )
+textxy( xaxis, se_stats_s2$seArray[1:11], se_stats_s2$I,  cx = 1.0, dcol = "black", )
+ 
 
 # 2. Stepwise backwards regression
 #
