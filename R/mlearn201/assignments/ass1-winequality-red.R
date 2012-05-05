@@ -18,6 +18,7 @@
 #
 
 library(ggplot2)
+library(calibrate)
 rm(list=ls())
 
 
@@ -221,33 +222,32 @@ dev.off()
 ##1. Setup variables.  Calculate stepwise error as each column is added
 ## Start with first column
 
+nCols = ncol(wine_raw)
 folds = 10
-seArray <- rep(0.0, nCol-1)
+seArray <- rep(0.0, nCols-1)
 se_stats = stepwise_fw_regression(wine_raw, folds)
+
+ 
+# Use the learned column and keep adding new columns 
+# I is eventually all the columns of the data set.
+#
 seArray[1] <- se_stats$seBest
 I <- se_stats$iColBest
-
-
- 
-# Use the learned column and compare the pair 
-#run through the same calculation for the next 10 variables
-#skip past the first column
- 
 tCol = ncol(wine_raw)
-X = wine_raw[,1:(tCol-1)]
+X = as.matrix( wine_raw[,1:(tCol-1)] )
 Y = wine_raw[,tCol]
 nCol = ncol(X)
-colIndex = nCol - 1
+colIndex = 1:(nCol)
 Index <- 1:nrow(X)
 seBest <- 1000000.0 #set really big sum of square error    
 Xtemp <- X[,1]
 nxval <- folds # 10 fold, about 160 obs per fold.
-for(iStep in 1:nCol){
+for(iStep in 1:(nCol-1)){
     colSelection <- colIndex[-I]
 	seBest <- 1000000
 	for(iTry in 1:length(colSelection)){
-		iCols <- c(I,colSelection[iTry])
-        cat ('icols: ',iCols)
+		iCols <- c(I, colSelection[iTry])
+        cat (iTry,'--icols: ', iCols, "\n")
 		Xcurrent <- as.matrix(X[,iCols])
 		se <- 0.0
 		for(ixval in 1:nxval){
@@ -259,8 +259,9 @@ for(iStep in 1:nCol){
 			linMod <- lm(Ytrain ~ Xtrain)	
 			
 			v <- as.array(linMod$coefficients)
+            print(v)
 			isize <- length(v) - 1
-			yHat <- rep(0.0,nrow(Xnew))
+			yHat <- rep(0.0, nrow(Xnew))
 			for(i in 1:nrow(Xnew)){
 				yHat[i] <- v[1]
 				for(j in 1:isize){
@@ -271,8 +272,8 @@ for(iStep in 1:nCol){
 			seTemp <- ((1/nrow(Xnew))*sum(dY*dY))
 			se <- se + seTemp/nxval		
 		}
-		#print(se)
-		if( true) } #se < seBest) {
+        cat ("\n","se=", se )
+		if( se < seBest) {
 			seBest <- se
 			iBest <- colSelection[iTry]
 		}		
@@ -282,11 +283,23 @@ for(iStep in 1:nCol){
 	seArray[iStep + 1] <- seBest	
 }
 
-plot(seArray)
-points( sqrt(seArray), pch=".", cex=3, col=2)
+x <- rnorm(50)
+y <- rnorm(50)
+plot(x,y,asp=1)
+textxy(x,y,1:50,m=c(mean(x),mean(y)))
+
+
+# Don't now how last point gets there
+xaxis = seq(1, 11, length.out=11)
+plot(xaxis, seArray[1:11], main='Squared Error vs Iteration',col="blue", pch=19, ylim=c(0.4,0.5) )
+textxy( xaxis, seArray[1:11], I,  cx = 1.0, dcol = "black", )
+#points( seArray, pch=".", cex=3, col=2)
 
 # 2. Stepwise backwards regression
-
+#
+# Here we fit the entire model, and attempt to remove one
+# The one that has least impact on se is removed.
+#
 
 
 # 3.  All subsets
