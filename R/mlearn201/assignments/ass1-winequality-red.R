@@ -94,9 +94,7 @@ stepwise_fw_regression <- function (data_set, folds) {
     Y = data_set[,tCol]
     nCol = ncol(X)
     Index <- 1:nrow(X)
-    colIndex <- 1:nCol
-    seBest <- 1000000.0 #set really big sum of square error
-    seArray <- rep(0.0, nCol-1)
+    seBest <- 1000000.0 #set really big sum of square error    
     Xtemp <- X[,1]
     nxval <- folds # 10 fold, about 160 obs per fold.
     
@@ -131,7 +129,7 @@ stepwise_fw_regression <- function (data_set, folds) {
     		}
     		dY <- yHat -Ytest
     		seTemp <- (1/length(Xtext))*sum(dY*dY)
-            cat ("StandardError for", names(wine_raw)[iCol], ' error'  ,  seTemp , '\thello\n' )
+            cat ("StandardError for", names(wine_raw)[iCol], ' error'  ,  seTemp ,'\n' )
     		se <- se + seTemp/nxval		
     	}
     	#print(iCol + "--" + se)
@@ -178,6 +176,7 @@ data_set_frame <- data.frame(
 
 nCol = ncol(wine_raw)
 pushViewport(viewport(layout=grid.layout(1,nCol)))
+
 for(iCol in 1:nCol){
 
     name = names(wine_raw)[iCol]
@@ -222,72 +221,33 @@ dev.off()
 ##1. Setup variables.  Calculate stepwise error as each column is added
 ## Start with first column
 
-se_stats = stepwise_fw_regression(wine_raw, 10)
+folds = 10
+seArray <- rep(0.0, nCol-1)
+se_stats = stepwise_fw_regression(wine_raw, folds)
+seArray[1] <- se_stats$seBest
+I <- se_stats$iColBest
 
+
+ 
+# Use the learned column and compare the pair 
+#run through the same calculation for the next 10 variables
+#skip past the first column
+ 
 tCol = ncol(wine_raw)
 X = wine_raw[,1:(tCol-1)]
 Y = wine_raw[,tCol]
 nCol = ncol(X)
+colIndex = nCol - 1
 Index <- 1:nrow(X)
-colIndex <- 1:nCol
-seBest <- 1000000.0 #set really big sum of square error
-seArray <- rep(0.0, nCol-1)
+seBest <- 1000000.0 #set really big sum of square error    
 Xtemp <- X[,1]
-nxval <- 10 # 10 fold, about 160 obs per fold.
-
-
-## for each column, computer the regression
-## %% is modulus
-## Ytemp ~ Xtemptmp, is Y the output predicted by the X
-## This performs the stepwise for each column
-## fit the linear mod of Y for 10 different data sets
-for(iCol in 1:nCol){
-    Xcurrent <- X[,iCol]
-	se <- 0.0
-	for(ixval in 1:nxval){
-		Iout <- which(Index%%nxval==(ixval-1))        
-        #cat ("Number of Samples", length(Iout) , '\thello\n' )
-        
-        ##The negative is the test set.  The positive is the current training set
- 		Xtrain <- Xcurrent[-Iout]
-		Xtext <- Xcurrent[Iout]
-		Ytrain <- Y[-Iout]
-		Ytest <- Y[Iout]
-        
-        # Linear model returns coefficients
-        # y = mx+b.  The intercept, b is the first coefficient, and m is second cofficient.
-        # Use the cofficients to get the estimate Y.
-        # So we basically just get a line back.
-		linMod <- lm(Ytrain ~ Xtrain)	
-		v <- as.array(linMod$coefficients)
-		yHat <- rep(0.0,length(Xtext))  
-		for(i in 1:length(Xtext)) {
-			yHat[i] <- v[1] + Xtext[i]*v[2]		
-		}
-		dY <- yHat -Ytest
-		seTemp <- (1/length(Xtext))*sum(dY*dY)
-        cat ("StandardError for", names(wine_raw)[iCol], ' error'  ,  seTemp , '\thello\n' )
-		se <- se + seTemp/nxval		
-	}
-	#print(iCol + "--" + se)
-	if(se < seBest) {
-		seBest <- se
-		iColBest <- iCol
-	}
-}
- 
-
-seArray[1] <- seBest
-I <- iColBest
-
-
-#run through the same calculation for the next 10 variables
-#skip past the first column
+nxval <- folds # 10 fold, about 160 obs per fold.
 for(iStep in 1:nCol){
     colSelection <- colIndex[-I]
 	seBest <- 1000000
 	for(iTry in 1:length(colSelection)){
 		iCols <- c(I,colSelection[iTry])
+        cat ('icols: ',iCols)
 		Xcurrent <- as.matrix(X[,iCols])
 		se <- 0.0
 		for(ixval in 1:nxval){
@@ -312,7 +272,7 @@ for(iStep in 1:nCol){
 			se <- se + seTemp/nxval		
 		}
 		#print(se)
-		if(se<seBest){
+		if( true) } #se < seBest) {
 			seBest <- se
 			iBest <- colSelection[iTry]
 		}		
@@ -321,8 +281,9 @@ for(iStep in 1:nCol){
 	print(I)
 	seArray[iStep + 1] <- seBest	
 }
+
 plot(seArray)
-points(sqrt(seArray), pch=".", cex=3, col=2)
+points( sqrt(seArray), pch=".", cex=3, col=2)
 
 # 2. Stepwise backwards regression
 
