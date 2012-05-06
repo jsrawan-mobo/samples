@@ -122,7 +122,11 @@ class dao
 
 	protected function getPopulate($conditional)
 	{
-		customErrorHandler(E_USER_NOTICE, "dao::populate for table" . $this->table . " qualifier " . $conditional, __FILE__, __LINE__);			
+        ob_start();
+       	var_dump($conditional);
+        $conditionalString = ob_get_clean();
+
+		customErrorHandler(E_USER_NOTICE, "dao::populate for table" . $this->table . " qualifier " . $conditionalString , __FILE__, __LINE__);
 
 		$connection = db::factory('mysql',  $this->isAdmin());
 		

@@ -10,7 +10,6 @@ deny from all
 
 
 
-# testing
 #This would cause any error code resulting in to be forward to yoursite.com/errors/*.html
 #ErrorDocument 400 /errors/badrequest.html
 #ErrorDocument 401 /errors/authreqd.html

@@ -47,6 +47,12 @@ class parameterDef
         $this->showParameters($careerAcqId, "resume");
     }
 
+    /**
+     * @param $algorithmType
+     * @param $search_algorithmName
+     * @param $result_algorithmName
+     * @return null
+     */
     public function getParamDescriptions($algorithmType, $search_algorithmName, $result_algorithmName)
     {
 
