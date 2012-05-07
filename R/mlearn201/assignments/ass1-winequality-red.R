@@ -12,7 +12,7 @@
 #
 #
 # S-1 Read the file in and verify the follow
-#
+# tt
 # 1599 observations, or 11 attributes
 # avg/std/min/max/rms of all 11 attributes
 #
