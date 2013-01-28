@@ -9,6 +9,28 @@
  
 
 
+function fibnacciSequencePrint($n, $node = 'L') {
+
+    if ($n == 0) {
+       if ($node == 'L') print "0,";
+        return 0;
+    }
+
+    if ($n == 1) {
+        $fibN = fibnacciSequencePrint(0, $node) + 1;
+        if ($node == 'L') print "0,1,";
+        return 1;
+
+    }
+
+    $fibN = fibnacciSequencePrint($n-1, $node)  +  fibnacciSequencePrint($n-2, 'R');
+    if ($node == 'L') print "$fibN,";
+    return $fibN;
+
+}
+
+
+
 
 /**
  * @param $Fib1 - Fib(n-1)
@@ -117,7 +139,9 @@ echo "\ngcf26="; var_dump($gcfArray);
 
 echo "Sum of GCF=" .  array_sum(array_keys($gcfArray) );
 
-
+$n =8;
+echo "\nPrint Fibnacci of $n\n";
+$x = fibnacciSequencePrint($n);
 
 
 ?>
