@@ -1,9 +1,16 @@
 from optparse import OptionParser
 from collections import deque
+import numpy
+import sys
 
 def create_original(r):
 
-    array_original = [0 for x in range(0,r,1)]
+    #array_original = [0 for x in range(0,r,1)]
+    #array_original = [0] * r
+    array_original = numpy.zeros((r,1), dtype=numpy.int8)
+
+    print sys.getsizeof(numpy.int8(1))
+    print array_original.dtype.name
     return array_original
 
 
@@ -119,6 +126,7 @@ def main():
         list = return_min_integer_list(array_original, a, b, c, r, k, n)
         #print list
         print "Case #%d: %d" % (i+1, list[-1])
+
 if __name__ == '__main__':
 
     main()
