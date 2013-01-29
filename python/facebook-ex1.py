@@ -7,7 +7,7 @@ import sys
 class numpy_deque(object):
 
     def __init__(self, size):
-        self.deque_obj = numpy.zeros((size,1),dtype=numpy.int8)
+        self.deque_obj = numpy.zeros((size,1),dtype=numpy.int32)
         self.size = size
         self.l = 0
         self.r = -1
