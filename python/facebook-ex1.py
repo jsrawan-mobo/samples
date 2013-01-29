@@ -3,7 +3,7 @@ from collections import deque
 
 def create_original(r):
 
-    array_original = [0 for x in range(0,r-1)]
+    array_original = [0 for x in range(0,r,1)]
     return array_original
 
 
@@ -76,8 +76,6 @@ def return_min_integer_list(array_original, a, b, c, r, k, n):
 
         if finish_original:
             m_i = the_list.popleft()
-            print "yes"
-        print m_i
         array_original[m_i] -= 1
 
         #hint to tell us that we have a new min.
@@ -104,7 +102,7 @@ def main():
     if options.inputFile is not None:
         print "yes"
         filePath = options.inputFile
-        with open(filePath) as f:
+        with open(filePath, "r") as f:
             fileLines = f.read().splitlines()
     else:
         raise Exception ("Where is the bloody file")
@@ -114,14 +112,13 @@ def main():
     for i in range(0,count):
         n,k= [int(x) for x in fileLines[1+2*i].split(" ")]
         a,b,c,r = [int(x) for x in fileLines[2+2*i].split(" ")]
-        print a,b,c,r,n,k
+        #print a,b,c,r,n,k
         array_original= create_original(r)
         apply_function(array_original, a, b, c, r, k)
-        print array_original
+        #print array_original
         list = return_min_integer_list(array_original, a, b, c, r, k, n)
-        print list
+        #print list
         print "Case #%d: %d" % (i+1, list[-1])
-        break;
 if __name__ == '__main__':
 
     main()
