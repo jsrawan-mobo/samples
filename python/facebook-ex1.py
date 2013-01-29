@@ -3,14 +3,65 @@ from collections import deque
 import numpy
 import sys
 
+
+class numpy_deque(object):
+
+    def __init__(self, size):
+        self.deque_obj = numpy.zeros((size,1),dtype=numpy.int8)
+        self.size = size
+        self.l = 0
+        self.r = -1
+
+    def __len__(self):
+        if self.r > self.l:
+            return self.r - self.l + 1
+        else :
+            return self.r + len(self.deque_obj) - self.l + 1
+
+
+    def popleft(self):
+        item = self.deque_obj[self.l]
+        self.l += 1
+        if self.l >= self.size:
+            self.l = 0
+        return item * 1
+
+    def append(self, item):
+
+        if self.r != -1 and self.r == (self.l - 1):
+            self.l += 1
+            print "WARNING: overlapping queue left pointer, erasing object"
+
+        self.r += 1
+        if self.r >= self.size:
+            self.r = 0
+
+        self.deque_obj[self.r] = item * 1
+        return item
+
+    def __getitem__(self, key):
+
+        if key > 0:
+            i = self.l + key * 1
+        else:
+            i = self.r + key + 1  * 1
+        return self.deque_obj[i] * 1
+
+    def __setitem__(self, key, value):
+        if key>0:
+            i = self.l + key  * 1
+        else:
+            i = self.r + key  * 1
+        self.deque_obj[i] = value
+
 def create_original(r):
 
     #array_original = [0 for x in range(0,r,1)]
     #array_original = [0] * r
     array_original = numpy.zeros((r,1), dtype=numpy.int8)
 
-    print sys.getsizeof(numpy.int8(1))
-    print array_original.dtype.name
+    #print sys.getsizeof(numpy.int8(1))
+    #print array_original.dtype.name
     return array_original
 
 
@@ -63,18 +114,17 @@ def return_min_integer_list(array_original, a, b, c, r, k, n):
 
     k_i = k
     i = 0
-    the_list = deque([])
+    the_list = numpy_deque ( min(k+1,n-k+1) )
     seq = generate_sequence(a,b,c,r,k).__iter__()
     finish_original = False
-    for k_i in range (k,n + 1):
+    for k_i in range (k, n + 1):
 
         #Find the minimal and use it
         i = find_min(array_original, i)
         the_list.append(i)
-        i+=1
+        #i+=1
 
         #find out what sequence was, and reduce it
-
         if not finish_original:
             try:
                 m_i = seq.next()
