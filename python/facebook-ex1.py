@@ -3,7 +3,7 @@ from collections import deque
 
 def create_original(r):
 
-    array_original = [True for x in range(0,r-1)]
+    array_original = [0 for x in range(0,r-1)]
     return array_original
 
 
@@ -18,21 +18,21 @@ def generate_sequence( a, b, c, r, k):
 
 def apply_function(array_original, a, b, c, r, k):
     for m in generate_sequence(a,b,c,r,k):
-        if array_original[m]:
-            array_original[m] = False
-        else:
-            raise Exception("Duplicates!")
-            break #optimization, we will repeat for ever, no point of continuing (i think, just the number is sufficient.
+        array_original[m] += 1
+
+        #else:
+        #    raise Exception("Duplicates!")
+        #    break #optimization, we will repeat for ever, no point of continuing (i think, just the number is sufficient.
 
 
-def find_min_true(array_original, start_i):
+def find_min(array_original, start_i):
 
     i = start_i
     n = len(array_original)
     while start_i < n:
         v = array_original[i]
-        if v:
-            array_original[i] = False
+        if v == 0:
+            array_original[i] += 1
             return i
         i += 1
 
@@ -62,7 +62,7 @@ def return_min_integer_list(array_original, a, b, c, r, k, n):
     for k_i in range (k,n + 1):
 
         #Find the minimal and use it
-        i = find_min_true(array_original, i)
+        i = find_min(array_original, i)
         the_list.append(i)
         i+=1
 
@@ -78,14 +78,14 @@ def return_min_integer_list(array_original, a, b, c, r, k, n):
             m_i = the_list.popleft()
             print "yes"
         print m_i
-        array_original[m_i] = True
+        array_original[m_i] -= 1
 
         #hint to tell us that we have a new min.
         if m_i < i:
             i = m_i
 
         #Tbd if we run out of the function, then we have to pop the list.
-        if k_i == n:
+        if k_i == n-1:
             return the_list
 
     raise Exception ("Did not reach k_iter, before end of array")
@@ -120,8 +120,8 @@ def main():
         print array_original
         list = return_min_integer_list(array_original, a, b, c, r, k, n)
         print list
-        print "Case #%d: %d" % (i, list[-1])
-
+        print "Case #%d: %d" % (i+1, list[-1])
+        break;
 if __name__ == '__main__':
 
     main()
