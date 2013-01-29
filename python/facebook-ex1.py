@@ -5,31 +5,74 @@ def create_original(r):
     array_original = [True for x in range(0,r-1)]
     return array_original
 
-def apply_function(array_original, a, b, c, r, k):
 
+def generate_sequence( a, b, c, r, k):
     m_old = a % r
-    array_original[m_old] = False
+    yield m_old
     for i in range (1, k):
         m_new = (b * m_old + c) % r
-        if array_original[m_new]:
-            array_original[m_new] = False
-            m_old = m_new
+        yield m_new
+        m_old = m_new
+
+
+def apply_function(array_original, a, b, c, r, k):
+    for m in generate_sequence(a,b,c,r,k):
+        if array_original[m]:
+            array_original[m] = False
         else:
             break #optimization, we will repeat for ever, no point of continuing (i think, just the number is sufficient.
 
 
-def return_min_integer_list(array_original, k, n):
+def find_min_true(array_original, start_i):
 
+    i = start_i
+    n = len(array_original)
+    while start_i < n:
+        v = array_original[i]
+        if v:
+            array_original[i] = False
+            return i
+        i += 1
 
-    k_iter = k
+    raise "Exception could not find start_i"
+
+def return_min_integer_list(array_original, a, b, c, r, k, n):
+    """
+    The very first integer is from the original list.
+    However, after K slides, we need to turn on the previous one.
+    This is best done by stepping through the function, and keeping
+    the big array up to date, create a iterator
+    @param array_original:
+    @type array_original:
+    @param k:
+    @type k:
+    @param n:
+    @type n:
+    @return:
+    @rtype:
+    """
+
+    k_i = k
     i = 0
     the_list = []
-    for i,v in enumerate(array_original):
-        if v:
-            k_iter += 1
-            the_list.append(i)
+    seq = generate_sequence(a,b,c,r,k).__iter__()
+    for k_i in range (k,n + 1):
 
-        if k_iter == n:
+        #Find the minimal and use it
+        i = find_min_true(array_original, i)
+        the_list.append(i)
+        i+=1
+
+        #find out what sequence was, and reduce it
+        m_i = seq.next()
+        array_original[m_i] = True
+
+        #hint to tell us that we have a new min.
+        if m_i < i:
+            i = m_i
+
+        #Tbd if we run out of the function, then we have to pop the list.
+        if k_i == n:
             return the_list
 
     raise Exception ("Did not reach k_iter, before end of array")
@@ -62,7 +105,7 @@ def main():
         array_original= create_original(r)
         apply_function(array_original, a, b, c, r, k)
         print array_original
-        list = return_min_integer_list(array_original, k, n)
+        list = return_min_integer_list(array_original, a, b, c, r, k, n)
         print list
         print "Case #%d: %d" % (i, list[-1])
 
