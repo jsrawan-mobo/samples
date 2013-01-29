@@ -1,4 +1,5 @@
 from optparse import OptionParser
+from collections import deque
 
 def create_original(r):
 
@@ -20,6 +21,7 @@ def apply_function(array_original, a, b, c, r, k):
         if array_original[m]:
             array_original[m] = False
         else:
+            raise Exception("Duplicates!")
             break #optimization, we will repeat for ever, no point of continuing (i think, just the number is sufficient.
 
 
@@ -54,8 +56,9 @@ def return_min_integer_list(array_original, a, b, c, r, k, n):
 
     k_i = k
     i = 0
-    the_list = []
+    the_list = deque([])
     seq = generate_sequence(a,b,c,r,k).__iter__()
+    finish_original = False
     for k_i in range (k,n + 1):
 
         #Find the minimal and use it
@@ -64,7 +67,17 @@ def return_min_integer_list(array_original, a, b, c, r, k, n):
         i+=1
 
         #find out what sequence was, and reduce it
-        m_i = seq.next()
+
+        if not finish_original:
+            try:
+                m_i = seq.next()
+            except Exception, e:
+                finish_original = True
+
+        if finish_original:
+            m_i = the_list.popleft()
+            print "yes"
+        print m_i
         array_original[m_i] = True
 
         #hint to tell us that we have a new min.
