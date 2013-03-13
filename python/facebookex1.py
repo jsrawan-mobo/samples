@@ -84,7 +84,7 @@ def apply_function(array_original, a, b, c, r, k):
 
 
 def find_min(array_original, start_i):
-
+    return 0
     i = start_i
     n = len(array_original)
     while start_i < n:
@@ -145,15 +145,9 @@ def return_min_integer_list(array_original, a, b, c, r, k, n):
 
     raise Exception ("Did not reach k_iter, before end of array")
 
-def main():
-    parser = OptionParser(" Usage: facebook-ex1 --inputFile sample.txt")
-    parser.add_option('-i', '--inputFile', type = 'string', dest='inputFile',
-                         help='Pass in a user generated file')
-
-    (options, args) = parser.parse_args()
-
+def main(options):
     print options
-
+    return
     fileLines = []
 
     if options.inputFile is not None:
@@ -176,7 +170,13 @@ def main():
         list = return_min_integer_list(array_original, a, b, c, r, k, n)
         #print list
         print "Case #%d: %d" % (i+1, list[-1])
+        #break
 
 if __name__ == '__main__':
+    parser = OptionParser(" Usage: facebook-ex1 --inputFile sample.txt")
+    parser.add_option('-i', '--inputFile', type = 'string', dest='inputFile',
+                         help='Pass in a user generated file')
 
-    main()
+    (options, args) = parser.parse_args()
+
+    main(options)
