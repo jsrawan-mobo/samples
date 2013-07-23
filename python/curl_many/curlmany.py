@@ -1,8 +1,18 @@
 import urllib2, StringIO, csv
 from itertools import izip
+from optparse import OptionParser
 
 
-filename = "example1.csv"
+parser = OptionParser()
+
+str_help = "Pick an account names (i.e. milkyway1), seperated by comma. "
+parser.add_option("-f", "--filename", dest="filename",
+                  default="", help=str_help)
+
+(options, args) = parser.parse_args()
+filename = options.filename
+ 
+
 reader = csv.reader(open(filename), )
 next(reader, None)  # skip the headers
 for all_items in reader:
