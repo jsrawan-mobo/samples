@@ -1,0 +1,76 @@
+
+
+
+class TicTacToe {
+
+ 
+  	bool theBoard = null
+
+	public TicTacToe(n,m) {
+
+		theBoard = ArrayList<int>(m,n)
+    }
+
+   
+   	bool add_tic(x, y) {
+
+		if (x > theBoard or y > 2){
+		
+			throw new Exception("Invalid location,"+x+","+y)    
+		}
+        if (theBoard[x][y]){
+            throw new Exception("Position already taken")
+        }
+        theBoard[x][y] = true
+
+  	}
+    bool draw_board() {
+
+
+		for(y=0 ; y< 3 ; y++) {
+        	for (x=0 ; x<3 ; x++){
+			if (theBoard[x][y] == true) {
+            	print "X|"
+            }
+            else {
+                print " |"
+
+   		}
+    }
+
+   bool is_game_over(x,y,n=1) {
+        
+		xa = arrayList(<int>)
+        ya = arrayList(<int>)
+        if (x == 0) {
+        	xa.append(1)
+        }
+        if (x == 1) {
+        	xa.append(0,2)
+        }
+        if (x == 2) {
+        	xa.append(1)
+        }
+
+        if (y == 0) {
+        	ya.append(1)
+        }
+        if (y == 1) {
+        	ya.append(0,2)
+        }
+        if (y == 2) {
+        	ya.append(1)
+        }
+        
+        iter_x = xa.iterator()
+        for (iterx ; iterx != iter_x.end() ; iterx.next()){
+        	for (iterY ; iterY != iter_Y.end() ; iterY.next()){
+        		is_game_over(x,y,n+1)
+        
+
+   }
+
+   bool is_full_match(x,y,n=1) {
+ 
+
+}
