@@ -6,18 +6,9 @@ from sys import argv
 
 
 def lowest_ancestor(tree, a, b):
-    """
-    :param tree: edglist of tree
-    :param a: first ancestor
-    :param b: another ancestor
-    :return: common parent
-    """
-
     def find_all_descedents(tree, r, x):
         """
-        start at a node, and return a set of descedents until we match
-        for example, root noode, child1, child2, x
-        r can be set to the root node.
+        r is a single edglist.  the key is the node parent
         """
 
         if r == x:
@@ -38,22 +29,22 @@ def lowest_ancestor(tree, a, b):
     a_d = find_all_descedents(tree, 30, a)[0:-1]
     b_d = find_all_descedents(tree, 30, b)[0:-1]
 
-    # Find all in set that are common
-    # for each element, save a dictionary of its vale and iteration number
+    #our node is on the right side first.  So the lowest position
+    #value that maches is our winner
 
-    scores = defaultdict(int)
+    # BETTER WAY.  Add to has if doesn't exist.  Iterate
+
+    score = defaultdict(int)
     for pos, a in enumerate(a_d):
-        scores[a] += pos
+        score[a] += pos
     for pos, a in enumerate(b_d):
-        scores[a] += pos
+        score[a] += pos
 
-    # Figure out common nodes
     common = set(a_d) & set(b_d)
 
-    # Now find the ancestor with smallest value
     final_item = None
     max_score = 0
-    for item, score in scores.iteritems():
+    for item, score in score.iteritems():
         if item in common and score >= max_score:
             max_score = score
             final_item = item
@@ -84,9 +75,6 @@ if __name__ == "__main__":
     tree = buildtree()
 
     for fl in flist:
-        result = lowest_ancestor(tree, fl[0], fl[1])
 
-        if len(fl) > 2:
-            #test mode
-            assert fl[2] == result
+        result = lowest_ancestor(tree, fl[0], fl[1])
         print result
